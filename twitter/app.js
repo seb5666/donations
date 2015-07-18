@@ -16,15 +16,16 @@ var io = require('socket.io')(http);
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
-    client.stream('statuses/filter', {track: 'Donate'}, function(stream) {
-      stream.on('data', function(tweet) {  
-	      userDonate(tweet.user);
-      });
 
-      stream.on('error', function(error) {
-        throw error;
-      });
-    });
+client.stream('statuses/filter', {track: 'Donate10003208342'}, function(stream) {
+  stream.on('data', function(tweet) {  
+    userDonate(tweet.user);
+  });
+
+  stream.on('error', function(error) {
+    throw error;
+  });
+});
 
 
 http.listen(5002, function(){
