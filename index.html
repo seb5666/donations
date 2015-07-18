@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; width:100%; text-align:justify; word-break:break-all; }
+      #messages li, #pTweets li { padding: 5px 10px; min-height: 50px}
+      #messages li:nth-child(odd), #pTweets li:nth-child(odd) { background: #eee; }
+      #pastTweets {float: left; width: 50%}
+      #incomingTweets {float: right; width: 50%}
+
+
+    </style>
+  </head>
+  <body>
+    <div id="pastTweets">
+      <ul id="pTweets"></ul>
+    </div>
+    <div id="incomingTweets">
+      <ul id="messages"></ul>
+    </div>
+
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function(){
+	      
+        socket.emit('chat message', $('#m').val());
+        
+        $('#m').val('');
+        return false;
+      });
+      socket.on('chat message', function(msg){
+	  
+	  	console.log(msg);
+
+
+        if ($('#messages li').size() > 9) {
+          $("#messages li:nth-child(10)").remove();
+          $('#messages').prepend($('<li>').text(msg).fadeIn());
+        } else {
+          $('#messages').prepend($('<li>').text(msg).fadeIn());
+        }
+      });
+
+      socket.on('past tweets', function(msg){
+        for (i = 0; i < 10; i++) {
+          $('#pTweets').append($('<li>').text(msg.statuses[i].text));
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<!-- https://www.npmjs.com/package/sentiment -->
