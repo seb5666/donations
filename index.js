@@ -34,7 +34,7 @@ db.once('open', function (callback) {
 	console.log("database up");
 });
 
-/*client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
+client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
   stream.on('data', function(tweet) {  
     userDonate(tweet.user);
   });
@@ -43,20 +43,41 @@ db.once('open', function (callback) {
   	console.log(error);
     throw error;
   });
-});*/
+});
 
 var isUserRegistered = function(userId, successCallback){
-	User.find({'twitterId': 124124}, function(err, user){
-		console.log(err);
-		if (err){
-			console.log(err);
-		}
-		else {
-			console.log("found:");
+	// find each person with a last name matching 'Ghost'
+	var query = User.findOne({ 'twitterId': userId });
+
+	// selecting the `name` and `occupation` fields
+	query.select('twitterId');
+
+	// execute the query at a later time
+	query.exec(function (err, user) {
+	  if (err) return handleError(err);
+	  if(user){
+			console.log("logged");
 			console.log(user);
-			successCallback();
+		} else {
+			console.log("not logged");
 		}
-	});
+		successCallback();
+	})
+	// User.find({'twitterId': 124124}, function(err, user){
+	// 	console.log(err);
+	// 	if (err){
+	// 		console.log(err);
+	// 	}
+	// 	else {
+	// 		if(user){
+	// 			console.log("logged");
+	// 			console.log(user);
+	// 		} else {
+	// 			console.log("not logged");
+	// 		}
+	// 		successCallback();
+	// 	}
+	// });
 }
 
 function userDonate(user) {
@@ -64,7 +85,7 @@ function userDonate(user) {
 	function(){
 		console.log(user.id);
 		console.log(user.name);
-		console.log("user register");
+		//console.log("user registered");
 	});
 }
 
@@ -102,6 +123,7 @@ app.get("/connect",function(req,res) {
 
 app.post("/submit", function(req,res) {
 	console.log(req);
+	console.log(req.body);
 	var nonce = req.body.payment_method_nonce;
 	console.log(nonce);
 
