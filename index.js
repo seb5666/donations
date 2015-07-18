@@ -8,8 +8,9 @@ var braintree = require("braintree");
 var TwitterStrategy = require("passport-twitter").Strategy;
 var passport = require("passport");
 var configDB = require('./config/database.js');
-//var twitter = require("./config/oauth.js");
+var twitter = require("./config/oauth.js");
 var cookieParser = require('cookie-parser');
+var configDB = require('./config/database.js');
 
 
 mongoose.connect(configDB.url);
@@ -32,7 +33,6 @@ db.once('open', function (callback) {
 app.set("view engine", "jade");
 
 app.use(express.static('public'));
-app.use(cookieParser()); // read cookies (needed for auth)
 
 app.get("/login", function(req,res) {
 
