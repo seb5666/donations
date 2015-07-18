@@ -22,16 +22,22 @@ db.once('open', function (callback) {
 	console.log("database up");
 });
 
+var isUserRegistered = function(twitterId){
+	User.find({ "twitterId" : twitterId }, function(err,user) {
+		if (err) {
+  			return false;
+  		}
+  		return true;
+	})
+}
+
 app.set("view engine", "jade");
 
 app.use(express.static('public'));
 
 app.get("/login", function(req,res) {
-
-
+	res.send(isUserRegistered("dkasjhfjks"));
 });
-
-//app.post("/login",)
 
 app.get('/', function (req, res) {
 
