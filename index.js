@@ -9,37 +9,44 @@ var TwitterStrategy = require("passport-twitter").Strategy;
 var passport = require("passport");
 var configDB = require('./config/database.js');
 var confBraintree = require('./config/braintreeconf.js')
-//var twitter = require("./config/oauth.js");
+var twitter = require("./config/oauth.js");
 var cookieParser = require('cookie-parser');
-
+var User = require("./models/user.js")
 
 mongoose.connect(configDB.url);
 
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-  	// yay!
-  	console.log("ashflkjhsa");
-  	var kittySchema = mongoose.Schema({
-    	name: String
-	});
-
-	var Kitten = mongoose.model('Kitten', kittySchema);
-
-	var silence = new Kitten({ name: 'Silence' });
-	console.log(silence.name); // 'Silence'
+	console.log("database up");
 });
+
+var isUserRegistered = function(twitterId){
+	User.find({ "twitterId" : twitterId }, function(err,user) {
+		if (err) {
+  			return false;
+  		}
+  		return true;
+	})
+}
 
 app.set("view engine", "jade");
 
 app.use(express.static('public'));
 
 app.get("/login", function(req,res) {
-
+	res.send(isUserRegistered("dkasjhfjks"));
 });
 
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+
+	var allusers = User.find(function (err, users) {
+  			if (err) {
+  				return console.error(err);
+  			}
+  			res.send(users);
+		});
 });
 
 app.get("/newtweet",function(req,res) {
