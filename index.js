@@ -15,11 +15,11 @@ app.get('/', function (req, res) {
 });
 
 app.get("/newtweet",function(req,res) {
-	res.render("index");
+	res.render("newtweet");
 });
 
 app.get("/connect",function(req,res) {
-	res.send("connect");
+	res.render("connect");
 });
 
 var server = app.listen(port, function () {
