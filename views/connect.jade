@@ -11,12 +11,16 @@ html(lang="en")
 			br
 
 			h3 Connect Twitter
-			
-			
+
+
 			br
+
 			h3 Add payment method
-			form(method="post" action="/checkout")#checkout
+			form(method="post" action="/submit")#checkout
 				#payment-form
+				br
+				button(role="button").btn.btn-primary.btn-lg Save
+
 
 
 		script var token = !{JSON.stringify(token)}

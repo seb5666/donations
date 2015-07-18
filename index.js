@@ -9,7 +9,7 @@ var TwitterStrategy = require("passport-twitter").Strategy;
 var passport = require("passport");
 var configDB = require('./config/database.js');
 var confBraintree = require('./config/braintreeconf.js')
-var twitter = require("./config/oauth.js");
+//var twitter = require("./config/oauth.js");
 var cookieParser = require('cookie-parser');
 var User = require("./models/user.js")
 
@@ -65,6 +65,32 @@ app.get("/connect",function(req,res) {
     	//console.log(response.clientToken);
     	res.render("connect", {token: response.clientToken});
   	});
+	
+});
+
+app.post("/submit", function(req,res) {
+	var nonce = req.body.payment_method_nonce;
+	console.log(nonce);
+
+	var gateway = braintree.connect({
+	    environment:  braintree.Environment.Sandbox,
+	    merchantId:   confBraintree.merchantId,
+	    publicKey:    confBraintree.publicKey,
+	    privateKey:   confBraintree.privateKey
+	});
+
+	gateway.customer.create({
+		paymentMethodNonce: nonceFromTheClient
+	}, function (err, result) {
+		result.success;
+		// true
+
+		result.customer.id;
+		// e.g 160923
+
+		result.customer.paymentMethods[0].token;
+		// e.g f28wm
+	});
 	
 });
 
