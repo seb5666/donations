@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
 var jade = require("jade");
-
+var mongoose = require("mongoose");
 
 var configDB = require('./config/database.js');
+
+mongoose.connect(configDB.url);
 
 app.set("view engine", "jade");
 
