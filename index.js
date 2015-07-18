@@ -3,6 +3,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 var jade = require("jade");
 var mongoose = require("mongoose");
+var braintree = require("braintree");
 
 var configDB = require('./config/database.js');
 
@@ -17,7 +18,7 @@ app.get('/', function (req, res) {
 });
 
 app.get("/newtweet",function(req,res) {
-	res.render("newtweet");
+	res.render("newtweet", {name: "Robert"});
 });
 
 app.get("/connect",function(req,res) {
