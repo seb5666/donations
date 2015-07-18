@@ -10,7 +10,16 @@ var Vibe = require('ui/vibe');
 var Response;
 var ajaxResponseReceived = false;
 
+// Splash screen for the app
 var splashScreen = new UI.Window({fullscreen:true});
+
+var image = new UI.Image({
+    image: 'images/logo2.png'
+});
+splashScreen.add(image);
+
+splashScreen.show();
+
 
 // First landing page for the Pebble app
 var main = new UI.Card({
@@ -24,7 +33,7 @@ function getData(){
   ajaxResponseReceived = false;
   Response = null;
   
-  ajax({url:'', type: 'json'},
+  ajax({url:'https://api.random.org/json-rpc/1/invoke', type: 'json'},
        function(data) {
          Response = data;
          ajaxResponseReceived = true;
@@ -60,8 +69,8 @@ main.on('click', 'select', function(e){
   
   appMenu.on('select', function(e) {
     var appDetails = new UI.Card({
-      title: "Fake Title 1",
-      body: "Another fake bit of text",
+      title: "Money raised:",
+      body: '',
       scrollable: true
       });
     
