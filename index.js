@@ -24,6 +24,12 @@ var client = new Twitter({
   access_token_secret: 'EMF5bHsVh12pGMyoUSJnVoldtWh1t809QM3iorzOGeZJb'
 });
 
+var bodyParser = require('body-parser')
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+
 
 mongoose.connect(configDB.url);
 
@@ -106,8 +112,7 @@ app.get("/connect",function(req,res) {
 });
 
 app.post("/submit", function(req,res) {
-	console.log(req);
-	var nonce = req.body.payment_method_nonce;
+	var nonce = req.body;
 	console.log(nonce);
 
 	var gateway = braintree.connect({
@@ -117,19 +122,20 @@ app.post("/submit", function(req,res) {
 	    privateKey:   confBraintree.privateKey
 	});
 
-	/*gateway.customer.create({
-		paymentMethodNonce: nonceFromTheClient
+	gateway.customer.create({
+		paymentMethodNonce: nonce
 	}, function (err, result) {
-		result.success;
+		console.log(err);
+		console.log(result.success);
 		// true
 
-		result.customer.id;
+		//console.log(result.customer.id);
 		// e.g 160923
 
-		result.customer.paymentMethods[0].token;
+		//console.log(result.customer.paymentMethods[0].token);
 		// e.g f28wm
-	});*/
-	
+	});
+	//res.send("payment and twitter saved");
 });
 
 var server = app.listen(port, function () {
