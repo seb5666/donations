@@ -1,9 +1,12 @@
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
+var jade = require("jade");
+
 
 var configDB = require('./config/database.js');
 
+app.set("view engine", "jade");
 
 app.use(express.static('public'));
 
@@ -12,7 +15,7 @@ app.get('/', function (req, res) {
 });
 
 app.get("/newtweet",function(req,res) {
-	res.send("newtweet");
+	res.render("index");
 });
 
 app.get("/connect",function(req,res) {
