@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 8081;
 var jade = require("jade");
 var mongoose = require("mongoose");
 var braintree = require("braintree");
@@ -11,7 +11,19 @@ var configDB = require('./config/database.js');
 var confBraintree = require('./config/braintreeconf.js')
 //var twitter = require("./config/oauth.js");
 var cookieParser = require('cookie-parser');
-var User = require("./models/user.js")
+
+var configDB = require('./config/database.js');
+var User = require("./models/user.js");
+
+var Twitter = require('twitter');
+
+var client = new Twitter({
+  consumer_key: 'hDpOw5xvmp4P5VaogPIyqxW79',
+  consumer_secret: '0YyMNRYrOyWu1R8HD3N74Ze0aMXFi2TZALxZ00yrR5Aeg7yQzs',
+  access_token_key: '463726282-wH7LEiV8n3nW46vam6MA96j9Lot1NNiqiOkH0GKl',
+  access_token_secret: 'EMF5bHsVh12pGMyoUSJnVoldtWh1t809QM3iorzOGeZJb'
+});
+
 
 mongoose.connect(configDB.url);
 
@@ -22,25 +34,49 @@ db.once('open', function (callback) {
 	console.log("database up");
 });
 
-var isUserRegistered = function(twitterId){
-	User.find({ "twitterId" : twitterId }, function(err,user) {
-		if (err) {
-  			return false;
-  		}
-  		return true;
-	})
+client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
+  stream.on('data', function(tweet) {  
+    userDonate(tweet.user);
+  });
+
+  stream.on('error', function(error) {
+    throw error;
+  });
+});
+
+function isUserRegistered(userId, callback){
+	User.find({twitterId: userId}, function(err, user){
+		if (err){
+			console.log(err);
+			return false;
+		}
+		else {
+			console.log("found:");
+			console.log(user);
+			callback();
+		}
+	});
 }
+
+function userDonate(user) {
+	isUserRegistered(user.id, function(){
+		console.log(user.id);
+		console.log(user.name);
+		console.log("user register");
+	});
+}
+
+app.get("/login", function(req,res) {
+	isUserRegistered(488277192, function(){
+		res.send("found");
+	});
+});
 
 app.set("view engine", "jade");
 
 app.use(express.static('public'));
 
-app.get("/login", function(req,res) {
-	res.send(isUserRegistered("dkasjhfjks"));
-});
-
 app.get('/', function (req, res) {
-
 	var allusers = User.find(function (err, users) {
   			if (err) {
   				return console.error(err);
@@ -52,6 +88,7 @@ app.get('/', function (req, res) {
 app.get("/newtweet",function(req,res) {
 	res.render("newtweet", {name: "Robert"});
 });
+
 
 app.get("/connect",function(req,res) {
 	var gateway = braintree.connect({
