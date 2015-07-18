@@ -34,7 +34,7 @@ db.once('open', function (callback) {
 	console.log("database up");
 });
 
-client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
+/*client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
   stream.on('data', function(tweet) {  
     userDonate(tweet.user);
   });
@@ -43,7 +43,7 @@ client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
   	console.log(error);
     throw error;
   });
-});
+});*/
 
 var isUserRegistered = function(userId, successCallback){
 	User.find({'twitterId': 124124}, function(err, user){
@@ -101,6 +101,7 @@ app.get("/connect",function(req,res) {
 });
 
 app.post("/submit", function(req,res) {
+	console.log(req);
 	var nonce = req.body.payment_method_nonce;
 	console.log(nonce);
 
@@ -111,7 +112,7 @@ app.post("/submit", function(req,res) {
 	    privateKey:   confBraintree.privateKey
 	});
 
-	gateway.customer.create({
+	/*gateway.customer.create({
 		paymentMethodNonce: nonceFromTheClient
 	}, function (err, result) {
 		result.success;
@@ -122,7 +123,7 @@ app.post("/submit", function(req,res) {
 
 		result.customer.paymentMethods[0].token;
 		// e.g f28wm
-	});
+	});*/
 	
 });
 
