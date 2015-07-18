@@ -3,11 +3,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 var jade = require("jade");
 var mongoose = require("mongoose");
-var TwitterStrategy = require("passport-twitter").Strategy;
-var passport = require("passport");
 var configDB = require('./config/database.js');
-var twitter = require("./config/oauth.js");
-var cookieParser = require('cookie-parser');
 
 
 mongoose.connect(configDB.url);
@@ -30,7 +26,6 @@ db.once('open', function (callback) {
 app.set("view engine", "jade");
 
 app.use(express.static('public'));
-app.use(cookieParser()); // read cookies (needed for auth)
 
 app.get("/login", function(req,res) {
 
