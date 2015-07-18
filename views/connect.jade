@@ -9,17 +9,16 @@ html(lang="en")
 			h1 Connect your accounts
 
 			br
+			form(method="post" action="/submit")
+				h3 Connect Twitter
 
-			h3 Connect Twitter
 
+				br
 
-			br
-
-			h3 Add payment method
-			form(method="post" action="/submit")#checkout
+				h3 Add payment method
 				#payment-form
 				br
-				button(role="button").btn.btn-primary.btn-lg Save
+				input(type="submit" value="Save").btn.btn-primary.btn-lg
 
 
 
