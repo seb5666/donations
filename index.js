@@ -4,23 +4,15 @@ var port = process.env.PORT || 8080;
 var jade = require("jade");
 var mongoose = require("mongoose");
 var configDB = require('./config/database.js');
-
+var User = require("./models/user.js")
 
 mongoose.connect(configDB.url);
 
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-  	// yay!
-  	console.log("ashflkjhsa");
-  	var kittySchema = mongoose.Schema({
-    	name: String
-	});
-
-	var Kitten = mongoose.model('Kitten', kittySchema);
-
-	var silence = new Kitten({ name: 'Silence' });
-	console.log(silence.name); // 'Silence'
+	console.log("database up");
 });
 
 app.set("view engine", "jade");
@@ -29,10 +21,19 @@ app.use(express.static('public'));
 
 app.get("/login", function(req,res) {
 
+
 });
 
+//app.post("/login",)
+
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+
+	var allusers = User.find(function (err, users) {
+  			if (err) {
+  				return console.error(err);
+  			}
+  			res.send(users);
+		});
 });
 
 app.get("/newtweet",function(req,res) {
