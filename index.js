@@ -34,7 +34,7 @@ db.once('open', function (callback) {
 	console.log("database up");
 });
 
-client.stream('statuses/filter', {track: 'Donate'}, function(stream) {
+client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
   stream.on('data', function(tweet) {  
     userDonate(tweet.user);
   });
@@ -45,11 +45,11 @@ client.stream('statuses/filter', {track: 'Donate'}, function(stream) {
   });
 });
 
-function isUserRegistered(userId, failureCallback, successCallback){
-	User.find({twitterId: userId}, function(err, user){
+var isUserRegistered = function(userId, successCallback){
+	User.find({'twitterId': 124124}, function(err, user){
+		console.log(err);
 		if (err){
 			console.log(err);
-			failureCallback();
 		}
 		else {
 			console.log("found:");
@@ -61,9 +61,6 @@ function isUserRegistered(userId, failureCallback, successCallback){
 
 function userDonate(user) {
 	isUserRegistered(user.id , 
-	function(){
-		console.log("User not logged");
-	},
 	function(){
 		console.log(user.id);
 		console.log(user.name);
