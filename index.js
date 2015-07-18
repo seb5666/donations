@@ -8,9 +8,9 @@ var braintree = require("braintree");
 var TwitterStrategy = require("passport-twitter").Strategy;
 var passport = require("passport");
 var configDB = require('./config/database.js');
-var twitter = require("./config/oauth.js");
+var confBraintree = require('./config/braintreeconf.js')
+//var twitter = require("./config/oauth.js");
 var cookieParser = require('cookie-parser');
-var configDB = require('./config/database.js');
 
 
 mongoose.connect(configDB.url);
@@ -47,7 +47,18 @@ app.get("/newtweet",function(req,res) {
 });
 
 app.get("/connect",function(req,res) {
-	res.render("connect");
+	var gateway = braintree.connect({
+	    environment:  braintree.Environment.Sandbox,
+	    merchantId:   confBraintree.merchantId,
+	    publicKey:    confBraintree.publicKey,
+	    privateKey:   confBraintree.privateKey
+	});
+
+	gateway.clientToken.generate({}, function (err, response) {
+    	//console.log(response.clientToken);
+    	res.render("connect", {token: response.clientToken});
+  	});
+	
 });
 
 var server = app.listen(port, function () {
