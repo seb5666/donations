@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 8081;
+var port = process.env.PORT || 8083;
 var jade = require("jade");
 var mongoose = require("mongoose");
 var braintree = require("braintree");
@@ -34,43 +34,42 @@ db.once('open', function (callback) {
 	console.log("database up");
 });
 
-client.stream('statuses/filter', {track: 'Donate100'}, function(stream) {
+client.stream('statuses/filter', {track: 'Donate'}, function(stream) {
   stream.on('data', function(tweet) {  
     userDonate(tweet.user);
   });
 
   stream.on('error', function(error) {
+  	console.log(error);
     throw error;
   });
 });
 
-function isUserRegistered(userId, callback){
+function isUserRegistered(userId, failureCallback, successCallback){
 	User.find({twitterId: userId}, function(err, user){
 		if (err){
 			console.log(err);
-			return false;
+			failureCallback();
 		}
 		else {
 			console.log("found:");
 			console.log(user);
-			callback();
+			successCallback();
 		}
 	});
 }
 
 function userDonate(user) {
-	isUserRegistered(user.id, function(){
+	isUserRegistered(user.id , 
+	function(){
+		console.log("User not logged");
+	},
+	function(){
 		console.log(user.id);
 		console.log(user.name);
 		console.log("user register");
 	});
 }
-
-app.get("/login", function(req,res) {
-	isUserRegistered(488277192, function(){
-		res.send("found");
-	});
-});
 
 app.set("view engine", "jade");
 
@@ -102,7 +101,6 @@ app.get("/connect",function(req,res) {
     	//console.log(response.clientToken);
     	res.render("connect", {token: response.clientToken});
   	});
-	
 });
 
 
