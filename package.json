@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.13.1",
     "jade": "^1.11.0",
+    "mongoose": "^4.0.7",
     "passport-twitter": "^1.0.3"
   }
 }
