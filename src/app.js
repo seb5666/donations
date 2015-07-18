@@ -10,14 +10,13 @@ var Vibe = require('ui/vibe');
 var Response;
 var ajaxResponseReceived = false;
 
-// Currently not working
-var splashScreen = new UI.Card({banner: 'LOGO_EXAMPLE'});
-splashScreen.show();
+var splashScreen = new UI.Window({fullscreen:true});
 
 // First landing page for the Pebble app
 var main = new UI.Card({
   title: "#donate",
-  body: "Companion dashboard app for #donate"
+  body: "Companion dashboard app for #donate",
+  textAlign: 'center'
 });
 
 function getData(){
@@ -34,14 +33,46 @@ function getData(){
          main.body('Press select to browse. \n\n Shake to refresh.');
        },
        function(error){
-         console.log('Error receiving data from 'url'');
+         console.log('Error receiving data from:');
          main.body("Could not download posts. \n\n Shake to try again.");
        }
-    };
+    );
 }
 
 main.show();
-getData();
+//getData();
+
+main.on('click', 'select', function(e){
+  var appMenu = new UI.Menu({
+    sections: [{
+      title: "Main Menu",
+      items: [{
+        title: "Your campaigns",
+        subtitle: "A list of your current active campaigns"
+      },{
+        title: "Current donation totals",
+        subtitle: "Check the current total"
+      }
+             ]}
+            ]}
+          ); 
+  appMenu.show();
+  
+  appMenu.on('select', function(e) {
+    var appDetails = new UI.Card({
+      title: "Fake Title 1",
+      body: "Another fake bit of text",
+      scrollable: true
+      });
+    
+    appDetails.show();
+  });
+  
+  appMenu.on('accelTap', function(e) {
+    console.log('Shake detected.');
+    getData();
+  });
+});
 
   
   
